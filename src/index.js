@@ -1,96 +1,70 @@
 const express = require('express');
 const app  = express();
-const morgan = require('morgan'); // Muestra las solicitudes
-const cors = require('cors'); // Permite conexiones externas al servidor
+const morgan = require('morgan');
+const cors = require('cors'); 
 
-// Configuración del sevidor en el puerto 3000
 app.set('port', process.env.PORT || 3000);
-app.set('json spaces', 2); // Habilitamos JSON
+app.set('json spaces', 2);
 
-app.use(morgan('dev')); // Cargar morgan maneja errores
+app.use(morgan('dev'));
 app.use(express.urlencoded({extended:false}));
-app.use(express.json()); // Manejar el formato JSON
-app.use(cors()); // Permitir conexiones externas
+app.use(express.json());
+app.use(cors()); // Importante para que el HTML pueda "hablar" con la API
 
+// Ruta de prueba
 app.get('/', (req, res) => {
-    res.json(
-        {
-            "Title": "Hola Mundo esta es mi primera API"
-        }
-    )
+    res.json({ "Title": "Hola Mundo esta es mi primera API" });
 });
 
-// Para poder sumar
-app.post('/sumar', (req, res) => { // https://localhost:3000/sumar
-    const {num1, num2} = req.body; // Se declaran los datos de entrada
+// Función auxiliar para validar números (incluyendo el 0)
+const validarNumeros = (n1, n2) => {
+    return (n1 !== undefined && n1 !== null && n1 !== '') && 
+           (n2 !== undefined && n2 !== null && n2 !== '');
+}
 
-    // Validar que se hayan enviado los números que no esten vacios
-    if (!num1 || !num2) {
-        return res.status(400).send({ error: 'Faltan números para sumar'})
+// 1. SUMAR
+app.post('/sumar', (req, res) => {
+    const {num1, num2} = req.body;
+    if (!validarNumeros(num1, num2)) {
+        return res.status(400).send({ error: 'Faltan números' });
     }
-
-    // Sumar los números
-    const resultado = num1 + num2;
-
-    // Enviar el resultado al front
-
-    res.send({ resultado });
+    const resultado = parseFloat(num1) + parseFloat(num2);
+    res.json({ resultado: resultado }); // Siempre devolvemos "resultado"
 });
 
-// Para poder restar
+// 2. RESTAR
 app.post('/resta', (req, res) => {
     const {num1, num2} = req.body;
-
-    // Validar que se hayan enviado los numeros que no esten vacios
-    if (!num1 || !num2) {
-        return res.status(400).send({ error: "Faltan números para restar" })
+    if (!validarNumeros(num1, num2)) {
+        return res.status(400).send({ error: "Faltan números" });
     }
-
-    // Restar los dos numeros
-    const resta = num1 - num2
-
-    // Enviar los datos al front
-    res.send({ resta })
+    const resultado = parseFloat(num1) - parseFloat(num2);
+    res.json({ resultado: resultado }); // Devolvemos "resultado" en lugar de "resta"
 });
 
-// Para poder multiplicar
+// 3. MULTIPLICAR
 app.post('/multiplicacion', (req, res) => {
     const {num1, num2} = req.body;
-
-    // Validar que se hayan enviado los numeros que no esten vacios 
-    if(!num1 || !num2) {
-        return res.status(400).send({ error: "Faltan números para multiplicar" })
+    if (!validarNumeros(num1, num2)) {
+        return res.status(400).send({ error: "Faltan números" });
     }
-
-    // Multiplicar los dos numeros
-    const multiplicacion = num1 * num2
-
-    // Enviar los datos al front
-    res.send({ multiplicacion })
+    const resultado = parseFloat(num1) * parseFloat(num2);
+    res.json({ resultado: resultado });
 });
 
-// Para poder dividir
+// 4. DIVIDIR
 app.post('/division', (req, res) => {
-    const {num1, num2} = app.body;
-
-    // Validar que se hayan enviado los numeros que no esten vacios
-    if(!num1 || !num2) {
-        return res.status(400).send({ error: "Faltan numeros para dividir" })
+    const {num1, num2} = req.body;
+    if (!validarNumeros(num1, num2)) {
+        return res.status(400).send({ error: "Faltan números" });
     }
-
-    // Validar que el segundo numero no sea cero porque no se puede dividir entre cero 
-    if(num2 === 0) {
-        return res.status(400).send({ error: "No se puede dividir entre cero" })
+    if (parseFloat(num2) === 0) {
+        return res.status(400).send({ error: "No se puede dividir entre cero" });
     }
-
-    // Dividimos los dos numeros
-    const division = num1 / num2
-
-    // Enviar los datos al front
-    res.send({ division })
+    const resultado = parseFloat(num1) / parseFloat(num2);
+    res.json({ resultado: resultado });
 });
-
 
 app.listen(app.get('port'), () => {
-    console.log("Servidor en puerto 3000")
+    console.log(`Servidor corriendo en http://localhost:${app.get('port')}`);
 });
