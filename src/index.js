@@ -120,7 +120,7 @@ app.post('/area-circulo', (req, res) => {
 
 //Esto es para el perimetro de las figuras 
 // Triangulo
-app.post('perimetro-triangulo', (req, res) => {
+app.post('/perimetro-triangulo', (req, res) => {
     const {lado1, lado2, lado3} = req.body;
     if(!validarDatos(lado1, lado2, lado3)) {
         return res.status(400).send({ error: 'Faltan lados del triangulo'})
@@ -130,7 +130,7 @@ app.post('perimetro-triangulo', (req, res) => {
 });
 
 // Cuadrado
-app.post('perimetro-cuadrado', (req, res) => {
+app.post('/perimetro-cuadrado', (req, res) => {
     const {lado1} = req.body;
     if(!validarDatos(lado)) {
         return res.status(400).send({ error: 'Ingresa la longitud de un lado del cuadrado'})
@@ -140,7 +140,7 @@ app.post('perimetro-cuadrado', (req, res) => {
 });
 
 // Rectangulo
-app.post('perimetro-rectangulo', (req, res) => {
+app.post('/perimetro-rectangulo', (req, res) => {
     const {base, altura} = req.body;
     if(!validarDatos(base, altura)) {
         return res.status(400).send({ error: 'Faltan datos para el calculo del perimetro'})
