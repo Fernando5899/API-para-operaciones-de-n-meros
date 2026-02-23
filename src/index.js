@@ -132,7 +132,7 @@ app.post('/perimetro-triangulo', (req, res) => {
 // Cuadrado
 app.post('/perimetro-cuadrado', (req, res) => {
     const {lado1} = req.body;
-    if(!validarDatos(lado)) {
+    if(!validarDatos(lado1)) {
         return res.status(400).send({ error: 'Ingresa la longitud de un lado del cuadrado'})
     }
     const resultado = parseFloat(lado1) * 4;
