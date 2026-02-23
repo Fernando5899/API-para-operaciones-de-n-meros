@@ -88,7 +88,7 @@ app.post('/area-triangulo', (req, res) => {
 // Cuadrado 
 app.post('/area-cuadrado', (req, res) => {
     const {base} = req.body;
-    if (!validarArea(base)) {
+    if (!validarDatos(base)) {
         return res.status(400).send({ error: "Faltan números"});
     }
     const resultado = Math.pow(parseFloat(base), 2);
